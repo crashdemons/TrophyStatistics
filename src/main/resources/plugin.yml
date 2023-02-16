@@ -1,0 +1,26 @@
+name: TrophyStatistics
+main: com.github.crashdemons.trophystatistics.StatsPlugin
+version: ${project.version}
+author: crashdemons
+api-version: 1.13
+description: Trophy Stats Plugin
+depend: [PlayerHeads,MiningTrophies]
+
+
+
+
+commands:
+    lastroll:
+        usage: "/<command> <args>"
+        description: Example command
+        aliases: [checkroll,droprate]
+        permission: trophystatistics.lastroll
+permissions:
+    trophystatistics.*:
+        description: Gives all Example Permissions
+        default: false
+        children:
+            trophystatistics.lastroll: true
+    trophystatistics.lastroll:
+        description: Gives access to the example command
+        default: op
