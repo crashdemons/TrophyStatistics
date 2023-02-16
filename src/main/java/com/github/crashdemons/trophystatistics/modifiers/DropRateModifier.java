@@ -5,6 +5,8 @@
  */
 package com.github.crashdemons.trophystatistics.modifiers;
 
+import org.bukkit.ChatColor;
+
 /**
  * A modifier for the droprate including type and value information
  *
@@ -37,9 +39,13 @@ public class DropRateModifier {
      * @param level the level to be multiplied against the modifier
      */
     public DropRateModifier(final DropRateModifierType type, final double value, final int level) {
-        this.type = type;
         this.value = value;
         this.level = level;
+        if(type==DropRateModifierType.MULTIPLY && value==1.0)
+            this.type=DropRateModifierType.NO_EFFECT;
+        else
+            this.type = type;
+        
     }
     
     /**
@@ -142,6 +148,31 @@ public class DropRateModifier {
             default:
                 throw new IllegalArgumentException("An unsupported droprate modifier type was detected.");
         }
+    }
+    
+    @Override
+    public String toString(){
+        String str = ChatColor.GREEN+getType().name()+ChatColor.YELLOW;
+        switch (type) {
+            case MULTIPLY:
+                str+=" "+value;
+                break;
+            case ADD_MULTIPLE:
+                str+=" "+value;
+                break;
+            case ADD_MULTIPLE_PER_LEVEL:
+                str+=" "+level+"x "+value;
+                break;
+            case ADD_CONSTANT:
+                str+=" "+value;
+                break;
+            case SET_CONSTANT:
+                str+=" "+value;
+                break;
+            default:
+                break;
+        }
+        return str;
     }
     
 }

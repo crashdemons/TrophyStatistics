@@ -7,6 +7,7 @@ package com.github.crashdemons.trophystatistics;
 
 import com.github.crashdemons.miningtrophies.events.TrophyRollEvent;
 import com.github.crashdemons.trophystatistics.modifiers.DropRateModifier;
+import com.github.crashdemons.trophystatistics.modifiers.DropRateModifierType;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -91,13 +92,14 @@ public class DropRollRecord {
             for(Map.Entry<String,DropRateModifier> modifierEntry : modifiers.entrySet()){
                 String name = modifierEntry.getKey();
                 DropRateModifier mod = modifierEntry.getValue();
-                str += ChatColor.LIGHT_PURPLE+"    "+name+": "+ChatColor.GREEN+mod.getType().name()+ChatColor.YELLOW+" "+mod.getLevel()+"x "+mod.getValue()+"\n";
+                if(mod.getType()==DropRateModifierType.NO_EFFECT) continue;
+                str += ChatColor.LIGHT_PURPLE+"    "+name+": "+mod.toString()+"\n";
             }
             if(alwaysRewarded) str += ChatColor.LIGHT_PURPLE+"    User is Always Rewarded\n";
         }
         //str += "  (Luck doesn't show but affects the effective rate)\n";
-        str += ChatColor.GOLD+"  Modified Droprate: "+ChatColor.GREEN+effectiveDropRate+ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; roll needs to be under this)\n";
-        str += ChatColor.GOLD+"  Modified Roll: "+ChatColor.GREEN+doubleFormat.format(effectiveDropRoll)+ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; lower is better)\n";
+        if(effectiveDropRate!=originalDropRate) str += ChatColor.GOLD+"  Modified Droprate: "+ChatColor.GREEN+effectiveDropRate+ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; roll needs to be under this)\n";
+        if(effectiveDropRoll!=originalDropRoll) str += ChatColor.GOLD+"  Modified Roll: "+ChatColor.GREEN+doubleFormat.format(effectiveDropRoll)+ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; lower is better)\n";
         str += ChatColor.GOLD+" Roll was successful? "+(dropSuccess? ChatColor.GREEN+"YES":ChatColor.RED+"NO");
        
         return str;
