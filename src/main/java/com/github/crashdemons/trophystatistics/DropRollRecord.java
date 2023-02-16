@@ -7,10 +7,13 @@ package com.github.crashdemons.trophystatistics;
 
 import com.github.crashdemons.miningtrophies.events.TrophyRollEvent;
 import com.github.crashdemons.trophystatistics.modifiers.DropRateModifier;
-import com.github.crashdemons.trophystatistics.modifiers.DropRateModifierType;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.shininet.bukkit.playerheads.events.HeadRollEvent;
@@ -21,6 +24,7 @@ import org.shininet.bukkit.playerheads.events.HeadRollEvent;
  */
 public class DropRollRecord {    
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    NumberFormat doubleFormat = new DecimalFormat("#0.0000");
     
     public final DropRollType type;
     
@@ -29,7 +33,7 @@ public class DropRollRecord {
     private Entity targetEntity;
     
     //MT properties
-    private Block targetBlock;
+    private Material targetMaterial;
     //private final double fortuneModifier;
     
     //Shared properties
@@ -49,7 +53,7 @@ public class DropRollRecord {
             modifiers.put(entry.getKey(), DropRateModifier.fromMT( entry.getValue() ) );
         }
         
-        targetBlock = event.getTarget();
+        targetMaterial = event.getTargetMaterial();
         
         alwaysRewarded=event.getMinerAlwaysRewarded();
         roller = event.getMiner();
@@ -79,22 +83,22 @@ public class DropRollRecord {
     }
     @Override
     public String toString() {
-        String str = "Drop Roll: "+type.name()+ " "+(type==DropRollType.HEAD ? targetEntity.getName() : targetBlock.getType().name())+"\n"
-                + "  Original Droprate: " + originalDropRate + "\n"
-                + "  Original Roll: "+originalDropRoll+" (lower is better)\n";
+        String str = ChatColor.GOLD+"Drop Roll: "+ChatColor.GREEN+type.name()+ " "+ChatColor.YELLOW+(type==DropRollType.HEAD ? targetEntity.getName() : targetMaterial.name())+"\n"
+                + ChatColor.GOLD+"  Original Droprate: "+ChatColor.GREEN+ originalDropRate + ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; roll needs to be under this)\n"
+                + ChatColor.GOLD+"  Original Roll: "+ChatColor.GREEN+doubleFormat.format(originalDropRoll)+ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; lower is better)\n";
         if(modifiers.size()>0 || alwaysRewarded){
-            str += "  Modifiers:"+"\n";
+            str += ChatColor.GOLD+"  Modifiers:"+"\n";
             for(Map.Entry<String,DropRateModifier> modifierEntry : modifiers.entrySet()){
                 String name = modifierEntry.getKey();
                 DropRateModifier mod = modifierEntry.getValue();
-                str += "    "+name+": "+mod.getType().name()+" "+mod.getLevel()+"x "+mod.getValue()+"\n";
+                str += ChatColor.LIGHT_PURPLE+"    "+name+": "+ChatColor.GREEN+mod.getType().name()+ChatColor.YELLOW+" "+mod.getLevel()+"x "+mod.getValue()+"\n";
             }
-            if(alwaysRewarded) str += "    User is Always Rewarded\n";
+            if(alwaysRewarded) str += ChatColor.LIGHT_PURPLE+"    User is Always Rewarded\n";
         }
         //str += "  (Luck doesn't show but affects the effective rate)\n";
-        str += "  Effective Droprate: "+effectiveDropRate+"\n";
-        str += "  Effective Roll: "+effectiveDropRoll+" (lower is better)\n";
-        str += " Roll was successful? "+(dropSuccess?"YES":"NO");
+        str += ChatColor.GOLD+"  Modified Droprate: "+ChatColor.GREEN+effectiveDropRate+ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; roll needs to be under this)\n";
+        str += ChatColor.GOLD+"  Modified Roll: "+ChatColor.GREEN+doubleFormat.format(effectiveDropRoll)+ChatColor.GRAY+ChatColor.ITALIC+" (0.0-1.0; lower is better)\n";
+        str += ChatColor.GOLD+" Roll was successful? "+(dropSuccess? ChatColor.GREEN+"YES":ChatColor.RED+"NO");
        
         return str;
     }

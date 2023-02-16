@@ -102,7 +102,8 @@ public class StatsPlugin extends JavaPlugin implements Listener {
         sender.sendMessage(record.toString());
 
         //Do stuff
-        return false;
+        //return false;
+        return true;
     }
 
 }
