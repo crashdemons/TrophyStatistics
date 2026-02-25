@@ -2,7 +2,7 @@ name: TrophyStatistics
 main: com.github.crashdemons.trophystatistics.StatsPlugin
 version: ${project.version}
 author: crashdemons
-api-version: 1.13
+api-version: 1.21
 description: Trophy Stats Plugin
 depend: [PlayerHeads,MiningTrophies]
 
